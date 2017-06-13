@@ -1,0 +1,17 @@
+QFrame{
+    background: #FFFFFF;
+}
+
+QListWidget {
+    outline: none;
+}
+
+QListWidget::item {
+    padding-left: 10px;
+    height: 32px;
+    outline: none;
+    background: none;
+    color: #A3A5A8;
+    text-align: center;
+    font: bold;
+}

@@ -1,0 +1,7 @@
+QLineEdit{
+    margin-bottom: 1px;
+    border: 1px;
+    border-radius: 5px;
+    color: #555555;
+    font: 75 9pt "黑体";
+}

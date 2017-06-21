@@ -3,9 +3,11 @@ import sys
 
 sys.path.append('widgets')
 sys.path.append('apis')
+sys.path.append('features')
 
 from base import *
-from shanbay import *
+from slide import ListenMouseThread
+from shanbay import ShanbaySearch
 
 from showFrame import ShowFrame
 from searchFrame import SearchFrame
@@ -21,7 +23,6 @@ from searchFrame import SearchFrame
 """
 
 
-
 class Window(QWidget):
     """Window 承载整个界面。"""
     def __init__(self):
@@ -29,15 +30,18 @@ class Window(QWidget):
         self.setObjectName('MainWindow')
         self.setWindowTitle('Dictionary')
         self.resize(540, 490)
-
+        
         self.searchThread = RequestThread(self)
         self.searchThread.finished.connect(self.searchResult)
+
+        self.slideThread = ListenThread(self)
 
         self.mainLayout = VBoxLayout(self)
         
         self.setSearchFrame()
         self.setShowFrame()
 
+        self.slideThread.start()
 
     def setSearchFrame(self):
         self.searchFrame = SearchFrame(self)
@@ -54,12 +58,34 @@ class Window(QWidget):
 
     def searchWord(self):
         words = self.searchFrame.getText()
+        self.startSearch(words)
+
+    def startSearch(self, words):
         self.searchThread.setTarget(self.showFrame.engines[self.showFrame.getCurrentEngine()].searchWord)
         self.searchThread.setArgs(words)
         self.searchThread.start()
 
     def searchResult(self):
         self.showFrame.setText(self.searchThread.result['definition'])
+
+    def addEngine(self, name, funcName):
+
+        self.showFrame.addEngine(name, funcName())
+
+
+class ListenThread(ListenMouseThread):
+
+    def __init__(self, parent=None):
+        super(ListenThread, self).__init__(parent)
+        self.parent = parent
+
+        self.clipboard = QApplication.clipboard()
+        self.clipboard.dataChanged.connect(self.onClipboardChanged)
+        self.data = self.clipboard.mimeData().text()
+
+    def onClipboardChanged(self):
+        super(ListenThread, self).onClipboardChanged()
+        self.parent.startSearch(self.text)
 
 
 if __name__ == '__main__':

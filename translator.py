@@ -11,6 +11,7 @@ from shanbay import ShanbaySearch
 
 from showFrame import ShowFrame
 from searchFrame import SearchFrame
+from slideShow import SlideShow, SlideFrame
 
 """
 主界面分成。
@@ -34,14 +35,11 @@ class Window(QWidget):
         self.searchThread = RequestThread(self)
         self.searchThread.finished.connect(self.searchResult)
 
-        self.slideThread = ListenThread(self)
-
         self.mainLayout = VBoxLayout(self)
         
         self.setSearchFrame()
         self.setShowFrame()
 
-        self.slideThread.start()
 
     def setSearchFrame(self):
         self.searchFrame = SearchFrame(self)
@@ -73,6 +71,41 @@ class Window(QWidget):
         self.showFrame.addEngine(name, funcName())
 
 
+class SlideWindow(SlideShow):
+    def __init__(self, parent=None):
+        super(SlideWindow, self).__init__(parent)
+
+        self.engines = {}
+
+        self.addTab(SlideFrame(), "Shanbay", ShanbaySearch())
+        
+        self.slideThread = ListenThread(self)
+
+        self.slideSearchThread = RequestThread(self)
+        self.slideSearchThread.finished.connect(self.slideSearchFinished)
+        
+        self.slideThread.start()
+
+    def addTab(self, widget, name, engine):
+        super(SlideWindow, self).addTab(widget, name)
+        self.engines[name] = engine
+
+    def slideSearch(self, words):
+        self.slideSearchThread.setTarget(self.engines[
+            self.indexNames[self.getCurrentIndex()]].searchWord)
+        self.slideSearchThread.setArgs(words)
+        self.slideSearchThread.start()
+
+    def slideSearchFinished(self):
+        self.getCurrentWidget().setText(self.slideThread.text, self.slideSearchThread.result['definition'])
+        
+        if not self.isVisible():
+            self.open()
+            
+        x, y = self.slideThread.getXY()
+        self.activateWindow()
+        self.move(x, y)
+
 class ListenThread(ListenMouseThread):
 
     def __init__(self, parent=None):
@@ -85,13 +118,19 @@ class ListenThread(ListenMouseThread):
 
     def onClipboardChanged(self):
         super(ListenThread, self).onClipboardChanged()
-        self.parent.startSearch(self.text)
+        self.parent.slideSearch(self.text)
 
+    def getXY(self):
+        return self.xAndY
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
 
+    slideWindow = SlideWindow()
+
+    # slideWindow.show()
     main = Window()
     main.show()
+
 
     sys.exit(app.exec_())

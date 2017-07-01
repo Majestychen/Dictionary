@@ -5,7 +5,7 @@ Shanbay 查询单词的Api.
 """
 import json
 
-from apiBase import HttpRequest
+from apiBase import HttpRequest, makeStyle
 
 
 class ShanbaySearch(HttpRequest):
@@ -23,7 +23,8 @@ class ShanbaySearch(HttpRequest):
 
             # 目前只返回翻译。
             # 扇贝返回的翻译前面有一个空格。
-            return {'definition': '{word}\n{definition}'.format(word=word, definition=result['data']['definition'][1:])}
+            # return {'definition': '<h1><font color="#6ECC64">{word}</font><hr></h1><b>{definition}'.format(word=word, definition=result['data']['definition'][1:])}
+            return {'definition': makeStyle(word=word, definition=result['data']['definition'][1:])}
         else:
             return {'definition': '没有找到.'}
 

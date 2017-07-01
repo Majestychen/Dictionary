@@ -63,3 +63,9 @@ class HttpRequest(object):
         self.sessions.close()
 
         return False
+
+
+def makeStyle(word, definition):
+
+    definition = definition.replace('\n', '<br>')
+    return '<h1><font color="#6ECC64"><b>{word}</b></font><hr></h1><font color="#424C42"><b>{definition}</b></font>'.format(word=word, definition=definition)

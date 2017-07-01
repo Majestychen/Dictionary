@@ -15,12 +15,12 @@
 > 划词使用 ctrl + c 的复制方法划词。监视鼠标会导致鼠标有些许卡顿。
 
 
-<img src="1">
+<img src="https://github.com/HuberTRoy/Dictionary/blob/master/showPics/1.jpg">
 
-<img src="1">
+<img src="https://github.com/HuberTRoy/Dictionary/blob/master/showPics/2.jpg">
 
 
-###主要待更新：
-    0. 美化界面。
-    1. 系统托盘。
-    2. 方便的API扩展。
+###主要待更新： <br />
+    0. 美化界面。 <br />
+    1. 系统托盘。 <br />
+    2. 方便的API扩展。<br />

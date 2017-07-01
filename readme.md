@@ -20,8 +20,8 @@
 <img src="https://github.com/HuberTRoy/Dictionary/blob/master/showPics/2.jpg">
 
 
-###主要待更新： <br />
-		0. 美化界面。 <br />
-		1. 系统托盘。 <br />
-		2. 方便的API扩展。<br />
-		3. 其他方面更新。 <br />
+### 主要待更新： <br />
+    0. 美化界面。 <br />
+    1. 系统托盘。 <br />
+    2. 方便的API扩展。<br />
+    3. 其他方面更新。 <br />

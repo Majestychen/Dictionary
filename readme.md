@@ -19,6 +19,9 @@
 
 <img src="https://github.com/HuberTRoy/Dictionary/blob/master/showPics/3.jpg">
 
+### 2017/07/01更新: <br />
+    基本功能完备。
+
 <img src="https://github.com/HuberTRoy/Dictionary/blob/master/showPics/1.jpg">
 
 <img src="https://github.com/HuberTRoy/Dictionary/blob/master/showPics/2.jpg">

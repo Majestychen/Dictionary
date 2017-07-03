@@ -30,6 +30,8 @@ class Window(QWidget):
         super(Window, self).__init__()
         self.setObjectName('MainWindow')
         self.setWindowTitle('Dictionary')
+        self.setWindowFlags(Qt.FramelessWindowHint)
+
         self.resize(540, 490)
         
         self.searchThread = RequestThread(self)
@@ -42,7 +44,7 @@ class Window(QWidget):
 
 
     def setSearchFrame(self):
-        self.searchFrame = SearchFrame(self)
+        self.searchFrame = SearchAndControlFrame(self)
         self.searchFrame.setSearchButtonConnect(self.searchWord)
 
         self.mainLayout.addWidget(self.searchFrame)
@@ -71,9 +73,51 @@ class Window(QWidget):
         self.showFrame.addEngine(name, funcName())
 
 
+    def closeEvent(self, event):
+        sys.exit('close')
+
+
+class SearchAndControlFrame(QFrame):
+    """搜索区域以及控制区域。"""
+    def __init__(self, parent=None):
+        super(SearchAndControlFrame, self).__init__()
+        self.parent = parent
+        self.mainLayout = VBoxLayout(self)
+
+        self.controlFrame = ControlFrame(self.parent)
+        self.controlFrame.setButtonSlows(self.parent.showMinimized, self.parent.close)
+        self.controlFrame.setStyleFile('Qss/controlFrame.qss')
+
+        self.searchLine = SearchFrame(self.parent)
+
+        self.mainLayout.addWidget(self.controlFrame)
+        self.mainLayout.addWidget(self.searchLine)
+
+    def setSearchButtonConnect(self, func):
+        self.searchLine.setSearchButtonConnect(func)        
+
+
+    def setDisconnect(self):
+
+        self.searchLine.setDisconnect()
+
+    def getText(self):
+
+        return self.searchLine.getText()
+
 class SlideWindow(SlideShow):
     def __init__(self, parent=None):
         super(SlideWindow, self).__init__(parent)
+        
+        self.setWindowTitle("Definition")
+        self.setWindowFlags(Qt.FramelessWindowHint)
+
+        with open('Qss/slideWindow.qss', 'r') as f:
+
+            self.setStyleSheet(f.read())
+
+
+        self.setMinimumWidth(400)
 
         self.engines = {}
 
@@ -104,7 +148,8 @@ class SlideWindow(SlideShow):
             
         x, y = self.slideThread.getXY()
         self.activateWindow()
-        self.move(x, y)
+        self.move(x, y+20)
+
 
 class ListenThread(ListenMouseThread):
 
@@ -122,6 +167,7 @@ class ListenThread(ListenMouseThread):
 
     def getXY(self):
         return self.xAndY
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -14,6 +14,10 @@
 
 > 划词使用 ctrl + c 的复制方法划词。监视鼠标会导致鼠标有些许卡顿。
 
+### 2017/07/03更新: <br />
+    美化界面。使用绿色作为主基色。
+
+<img src="https://github.com/HuberTRoy/Dictionary/blob/master/showPics/3.jpg">
 
 <img src="https://github.com/HuberTRoy/Dictionary/blob/master/showPics/1.jpg">
 

@@ -27,6 +27,28 @@ class HBoxLayout(QHBoxLayout):
         self.setSpacing(0)
 
 
+class ControlFrame(QFrame):
+    def __init__(self, parent=None):
+        super(ControlFrame, self).__init__()
+        self.parent = parent
+        self.mainLayout = HBoxLayout(self)
+
+        self.mainLayout.addStretch(1)
+
+        self.showMinimumButton = QPushButton('_')
+        self.mainLayout.addWidget(self.showMinimumButton)
+        self.closeButton = QPushButton('×')
+        self.mainLayout.addWidget(self.closeButton)
+
+    def setStyleFile(self, filename, encoding='utf-8'):
+        with open(filename, 'r', encoding=encoding) as f:
+            self.setStyleSheet(f.read())
+
+    def setButtonSlows(self, minimumButtonFuncName, closeButtonFuncName):
+        self.showMinimumButton.clicked.connect(minimumButtonFuncName)
+        self.closeButton.clicked.connect(closeButtonFuncName)
+
+
 class RequestThread(QThread):
     """异步请求，类似Pyhton封装的Thread形式，用QThread在简单封装一下。"""
     def __init__(self, parent=None, target=None, *args, **kwargs):

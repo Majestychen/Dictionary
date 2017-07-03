@@ -1,0 +1,16 @@
+QFrame{
+    background: #00CA98;
+}
+
+QPushButton{
+    border: none;
+    font: bold;
+    font-size: 18px;
+    color: #9ADCBD;
+    padding: 5px;
+}
+
+
+QPushButton::hover{
+    color: white;
+}

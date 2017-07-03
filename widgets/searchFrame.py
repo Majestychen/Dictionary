@@ -14,12 +14,23 @@ class SearchFrame(QFrame):
             self.setStyleSheet(f.read())
 
         self.mainLayout = VBoxLayout(self)
+
+        self.setSearchLine()
+        # self.mainLayout.addStretch(1)
+        
+        # self.searchLine = SearchLine(self)
+        # self.mainLayout.addWidget(self.searchLine)
+
+        # self.mainLayout.addStretch(1)
+
+    def setSearchLine(self):
         self.mainLayout.addStretch(1)
         
         self.searchLine = SearchLine(self)
         self.mainLayout.addWidget(self.searchLine)
 
         self.mainLayout.addStretch(1)
+
 
     def setSearchButtonConnect(self, func):
         
@@ -59,3 +70,4 @@ class SearchLine(QFrame):
         self.mainLayout.addWidget(self.searchButton)
 
         self.mainLayout.addStretch(1)
+

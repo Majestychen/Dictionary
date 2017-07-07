@@ -12,6 +12,7 @@ from shanbay import ShanbaySearch
 from showFrame import ShowFrame
 from searchFrame import SearchFrame
 from slideShow import SlideShow, SlideFrame
+from systemTray import SystemTray
 
 """
 主界面分成。
@@ -30,6 +31,8 @@ class Window(QWidget):
         super(Window, self).__init__()
         self.setObjectName('MainWindow')
         self.setWindowTitle('Dictionary')
+        self.setWindowIcon(QIcon('icons/dictionary.png'))
+
         self.setWindowFlags(Qt.FramelessWindowHint)
 
         self.resize(540, 490)
@@ -41,7 +44,7 @@ class Window(QWidget):
         
         self.setSearchFrame()
         self.setShowFrame()
-
+        self.setTray()
 
     def setSearchFrame(self):
         self.searchFrame = SearchAndControlFrame(self)
@@ -72,6 +75,15 @@ class Window(QWidget):
 
         self.showFrame.addEngine(name, funcName())
 
+    def setTray(self):
+        self.systemTray = SystemTray(self, 'icons/dictionary.png')
+        self.systemTray.setToolTip("Dictionary!")
+        self.systemTray.activated.connect(lambda : self.show() and self.activateWindow())
+
+        closeAction = QAction('退出', self, triggered=self.close)
+        self.systemTray.addAction(closeAction)
+        
+        self.systemTray.show()
 
     def closeEvent(self, event):
         sys.exit('close')
@@ -85,7 +97,7 @@ class SearchAndControlFrame(QFrame):
         self.mainLayout = VBoxLayout(self)
 
         self.controlFrame = ControlFrame(self.parent)
-        self.controlFrame.setButtonSlows(self.parent.showMinimized, self.parent.close)
+        self.controlFrame.setButtonSlows(self.parent.hide, self.parent.close)
         self.controlFrame.setStyleFile('Qss/controlFrame.qss')
 
         self.searchLine = SearchFrame(self.parent)
@@ -96,7 +108,6 @@ class SearchAndControlFrame(QFrame):
     def setSearchButtonConnect(self, func):
         self.searchLine.setSearchButtonConnect(func)        
 
-
     def setDisconnect(self):
 
         self.searchLine.setDisconnect()
@@ -105,11 +116,32 @@ class SearchAndControlFrame(QFrame):
 
         return self.searchLine.getText()
 
+    """重写鼠标事件，实现窗口拖动。"""
+    def mousePressEvent(self, event):
+        if event.buttons() == Qt.LeftButton:
+            self.parent.m_drag = True
+            self.parent.m_DragPosition = event.globalPos()-self.parent.pos()
+            event.accept()
+
+    def mouseMoveEvent(self, event):
+        try:
+            if event.buttons() and Qt.LeftButton:
+                self.parent.move(event.globalPos()-self.parent.m_DragPosition)
+                event.accept()
+        except AttributeError:
+            pass
+
+    def mouseReleaseEvent(self, event):
+        if event.buttons() == Qt.LeftButton:
+            self.m_drag = False
+
+
 class SlideWindow(SlideShow):
     def __init__(self, parent=None):
         super(SlideWindow, self).__init__(parent)
         
         self.setWindowTitle("Definition")
+        self.setWindowIcon(QIcon('icons/dictionary.png'))
         self.setWindowFlags(Qt.FramelessWindowHint)
 
         with open('Qss/slideWindow.qss', 'r') as f:
